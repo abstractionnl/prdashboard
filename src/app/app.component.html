@@ -1,20 +1,57 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
+<div>
+  <h1 class="text-center">
+    PR Dashboard
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+  <table class="table table-hover">
+    <thead>
+      <th style="width: 100px">#</th>
+      <th>Title</th>
+      <th style="width: 200px">
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="toggle" id="repoSelection" data-toggle="dropdown" aria-haspopup="true">
+                  Repository: {{(filter$ | async).repository?.name || 'All'}}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="repoSelection">
+                 <a class="dropdown-item" (click)="selectRepo(null)" [class.active]="(filter$ | async).repositoryName == null">All</a>
+                 <a class="dropdown-item" href="#" *ngFor="let repo of repositories$ | async" (click)="selectRepo(repo)" [class.active]="(filter$ | async).repository?.name == repo.name">{{repo.name}} ({{repo.count}})</a>
+              </div>
+            </div>
+      </th>
+      <th style="width: 150px">Created on</th>
+      <th style="width: 200px">
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="toggle" id="creatorSelection" data-toggle="dropdown" aria-haspopup="true">
+                  Created By: {{(filter$ | async).creator?.displayName || 'All'}}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="creatorSelection">
+                 <a class="dropdown-item" (click)="selectCreator(null)" [class.active]="(filter$ | async).creator == null">Alle</a>
+                 <a class="dropdown-item" href="#" *ngFor="let creator of creators$ | async" (click)="selectCreator(creator)" [class.active]="(filter$ | async).creator?.id == creator.id">{{creator.displayName}} ({{creator.count}})</a>
+              </div>
+            </div>
+      </th>
+      <th style="width: 150px">Reviewers</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pr of data$ | async; trackBy: identifyPr">
+        <td><a href="https://dev.azure.com/embrace/Embrace Suite/_git/{{pr.repository.name}}/pullrequest/{{pr.pullRequestId}}" target="_blank">{{pr.pullRequestId}}</a></td>
+        <td>{{pr.title}} 
+          <span *ngIf="pr.isDraft" class="badge badge-secondary">draft</span> 
+          <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger">conflicts</span><br />
+          <small class="text-muted">{{stripRefHeads(pr.sourceRefName)}} into {{stripRefHeads(pr.targetRefName)}}</small>
+        </td>
+        <td>{{pr.repository.name}}</td>
+        <td>{{pr.creationDate | date : 'mediumDate' : undefined : 'nl'}}</td>
+        <td><img src="{{pr.createdBy.imageUrl}}" style="height: 33px;" class="rounded" /> {{pr.createdBy.displayName}}</td>
+        <td>
+          <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
+            <span *ngIf="reviewer.vote != 0" class="badge position-relative" >
+              <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-error]="reviewer.vote == -10">&nbsp;</span>
+              <img src="{{reviewer.imageUrl}}" style="height: 33px;" class="rounded" title="{{getVoteStatus(reviewer.vote)}} by {{reviewer.displayName}}" />
+            </span>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-

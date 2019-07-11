@@ -1,0 +1,10 @@
+.notify-badge {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.dropdown-menu {
+    max-height: 500px;
+    overflow-y: scroll;
+}
