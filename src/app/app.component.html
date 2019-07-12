@@ -13,7 +13,7 @@
                   Repository: {{(filter$ | async).repository?.name || 'All'}}
               </button>
               <div class="dropdown-menu" aria-labelledby="repoSelection">
-                 <a class="dropdown-item" (click)="selectRepo(null)" [class.active]="(filter$ | async).repositoryName == null">All</a>
+                 <a class="dropdown-item" (click)="selectRepo(null)" [class.active]="(filter$ | async).repository == null">All</a>
                  <a class="dropdown-item" href="#" *ngFor="let repo of repositories$ | async" (click)="selectRepo(repo)" [class.active]="(filter$ | async).repository?.name == repo.name">{{repo.name}} ({{repo.count}})</a>
               </div>
             </div>

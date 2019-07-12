@@ -84,14 +84,14 @@ export class AppComponent {
         })))
       );
 
-    var filters = window.localStorage.getItem('filters');
+    /*var filters = window.localStorage.getItem('filters');
     if (filters) {
       this.filter$.next(JSON.parse(filters));
     }
 
     this.filter$.pipe(skip(1)).subscribe(filters => {
       window.localStorage.setItem('filters', JSON.stringify(filters));
-    })     
+    })*/     
   }
 
   identifyPr(index, item) {
