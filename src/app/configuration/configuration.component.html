@@ -2,12 +2,13 @@
 <form>
     <div class="form-group">
     <label for="pat">Pat</label>
-      <input type="text" class="form-control" name="pat" [(ngModel)]="model.pat" #configurePat aria-describedby="patHelp" placeholder="Enter pat">
+      <input type="text" class="form-control" name="pat" [(ngModel)]="model.pat" aria-describedby="patHelp" placeholder="Enter pat">
       <small id="patHelp" class="form-text text-muted">Create a pat with read permission for Code.</small>
     </div>
     <div class="form-group">
-      <label for="pat">Organization</label>
-      <input type="text" class="form-control" name="organization" [(ngModel)]="model.organization" #configureOrganization placeholder="Enter organization">
+      <label for="organization">Organization/project</label>
+      <input type="text" class="form-control" name="organization" [(ngModel)]="model.organization" aria-describedby="organizationHelp" placeholder="Enter organization">
+      <small id="organizationHelp" class="form-text text-muted">The part after https://dev.azure.com/. Eg: embrace/Embrace Suite</small>
     </div>
 
     <button type="submit" class="btn btn-primary" [disabled]="!isValid()">Save</button>
