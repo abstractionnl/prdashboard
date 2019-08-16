@@ -1,0 +1,14 @@
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="toggle" id="repoSelection" data-toggle="dropdown" aria-haspopup="true">
+        <ng-container *ngIf="selection; else all">{{title}}: <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:selection}"></ng-container></ng-container>
+        <ng-template #all>
+            {{title}}: All
+        </ng-template>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="repoSelection">
+      <a class="dropdown-item" (click)="select(null)" [class.active]="isSelected(null)">All</a>
+      <a class="dropdown-item" href="#" *ngFor="let option of options" (click)="selectOption(option)" [class.active]="isSelected(option)">
+          <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container>
+      </a>
+    </div>
+  </div>

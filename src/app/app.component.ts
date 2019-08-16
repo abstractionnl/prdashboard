@@ -126,6 +126,10 @@ export class AppComponent {
     return item.id;
   }
 
+  trackById(item) {
+    return item.id;
+  }
+
   stripRefHeads(refname: string) {
     return refname.replace("refs/heads/", "");
   }
@@ -144,7 +148,7 @@ export class AppComponent {
     this.filter$.next({
       repository: repo,
       creator: null
-    });
+    }); 
   }
 
   selectCreator(creator) {

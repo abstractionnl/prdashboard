@@ -11,27 +11,25 @@
         <th style="width: 100px">#</th>
         <th>Title</th>
         <th style="width: 200px">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="toggle" id="repoSelection" data-toggle="dropdown" aria-haspopup="true">
-                    Repository: {{(filter$ | async).repository?.name || 'All'}}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="repoSelection">
-                  <a class="dropdown-item" (click)="selectRepo(null)" [class.active]="(filter$ | async).repository == null">All</a>
-                  <a class="dropdown-item" href="#" *ngFor="let repo of repositories$ | async" (click)="selectRepo(repo)" [class.active]="(filter$ | async).repository?.name == repo.name">{{repo.name}} ({{repo.count}})</a>
-                </div>
-              </div>
+          <app-dropdown 
+            title="Repository" 
+            [options]="repositories$ | async" 
+            [selection]="(filter$ | async).repository" 
+            (onSelect)="selectRepo($event)" 
+            [trackBy]="trackById">
+            <ng-template let-repo>{{repo.name}} ({{repo.count}})</ng-template>
+          </app-dropdown>
         </th>
         <th style="width: 150px">Created on</th>
         <th style="width: 200px">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="toggle" id="creatorSelection" data-toggle="dropdown" aria-haspopup="true">
-                    Created By: {{(filter$ | async).creator?.displayName || 'All'}}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="creatorSelection">
-                  <a class="dropdown-item" (click)="selectCreator(null)" [class.active]="(filter$ | async).creator == null">Alle</a>
-                  <a class="dropdown-item" href="#" *ngFor="let creator of creators$ | async" (click)="selectCreator(creator)" [class.active]="(filter$ | async).creator?.id == creator.id">{{creator.displayName}} ({{creator.count}})</a>
-                </div>
-              </div>
+          <app-dropdown 
+            title="Created By" 
+            [options]="creators$ | async" 
+            [selection]="(filter$ | async).creator" 
+            (onSelect)="selectCreator($event)" 
+            [trackBy]="trackById">
+            <ng-template let-creator>{{creator.displayName}} ({{creator.count}})</ng-template>
+          </app-dropdown>
         </th>
         <th style="width: 150px">Reviewers</th>
       </thead>
