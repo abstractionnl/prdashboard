@@ -47,7 +47,7 @@
           <td>
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
               <span *ngIf="reviewer.vote != 0" class="badge position-relative" >
-                <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-error]="reviewer.vote == -10">&nbsp;</span>
+                <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">&nbsp;</span>
                 <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{getVoteStatus(reviewer.vote)}} by {{reviewer.displayName}}" />
               </span>
             </span>
