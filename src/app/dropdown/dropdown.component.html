@@ -6,7 +6,7 @@
         </ng-template>
     </button>
     <div class="dropdown-menu" aria-labelledby="repoSelection">
-      <a class="dropdown-item" (click)="select(null)" [class.active]="isSelected(null)">All</a>
+      <a class="dropdown-item" (click)="selectOption(null)" [class.active]="isSelected(null)">All</a>
       <a class="dropdown-item" href="#" *ngFor="let option of options" (click)="selectOption(option)" [class.active]="isSelected(option)">
           <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container>
       </a>
