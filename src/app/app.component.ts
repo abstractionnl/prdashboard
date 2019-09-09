@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, BehaviorSubject, throwError, timer } from 'rxjs';
 import { map, concatMap, combineLatest, share, publish, refCount, withLatestFrom, skip, shareReplay } from 'rxjs/operators';
-import { ConfigurationModel } from './configuration-model';
+import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepositoryWithPrCount, IdentityRefWithPrCount, ConfigurationModel } from './models';
 
 @Component({
   selector: 'app-root',
@@ -10,22 +10,21 @@ import { ConfigurationModel } from './configuration-model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  pat = 'vrnxuqu2xciuqdvjqxcos22bwedk6rgm6eyhn4wvptahxakmihoq';
-
-  data$ : Observable<GitPullRequestWithLink[]>;
+  data$ : Observable<ExtendedGitPullRequest[]>;
   filter$: Subject<Filters> = new BehaviorSubject<Filters>({ repository: null, creator: null });  
   repositories$: Observable<GitRepositoryWithPrCount[]>;
   creators$: Observable<IdentityRefWithPrCount[]>;
 
   configure: boolean;
+  configuration: ConfigurationModel;
 
   trigger$ = timer(0, 30000); 
   
   constructor(private http: HttpClient) {    
     var configuration = window.localStorage.getItem('configuration');
     if (configuration) {
-      var parsedConfiguration = JSON.parse(configuration);
-      this.setupData(parsedConfiguration.pat, parsedConfiguration.organization);      
+      this.configuration = JSON.parse(configuration);
+      this.setupData();      
     } else {
       this.configure = true;
     }
@@ -40,10 +39,13 @@ export class AppComponent {
     })*/     
   }
 
-  setupData(pat: string, organization: string) {
+  setupData() {
     const headers = {
-      'Authorization': 'Basic ' + btoa('pat:' + pat)
+      'Authorization': 'Basic ' + btoa('pat:' + this.configuration.pat)
     };
+
+    const organization = this.configuration.organization;
+    const currentAuthorEmail = this.configuration.currentAuthorEmail;
 
     const dataUri = `https://dev.azure.com/${organization}/_apis/git/pullrequests?api-version=5.0&status=active`;
     const repositoriesUri = `https://dev.azure.com/${organization}/_apis/git/repositories?api-version=5.0`;
@@ -57,7 +59,11 @@ export class AppComponent {
     const loadedData$ = this.trigger$
       .pipe(
         concatMap(_ => loadData$),
-        map(data => data.map(pr => ({...pr, link: `https://dev.azure.com/${organization}/_git/${pr.repository.name}/pullrequest/${pr.pullRequestId}`}))), 
+        map(data => data.map(pr => ({
+          ...pr, 
+          link: `https://dev.azure.com/${organization}/_git/${pr.repository.name}/pullrequest/${pr.pullRequestId}`,
+          currentAuthorReview: pr.reviewers.find(reviewer => reviewer.uniqueName == currentAuthorEmail)
+        }))), 
         shareReplay(1)
       );
 
@@ -112,7 +118,8 @@ export class AppComponent {
   }
 
   updateConfiguration(config: ConfigurationModel) {
-    this.setupData(config.pat, config.organization);
+    this.configuration = config;
+    this.setupData();
     this.configure = false;
 
     window.localStorage.setItem('configuration', JSON.stringify(config));
@@ -157,76 +164,4 @@ export class AppComponent {
       creator: creator
     });
   }
-}
-
-interface Filters {
-  repository: any;
-  creator: any;
-}
-
-interface GitPullRequest {
-  artifactId: string;
-  closedBy?: IdentityRef;
-  closedDate: string;
-  createdBy: IdentityRef;
-  creationDate: string;
-  description: string;
-  isDraft: boolean;
-  mergeStatus: string;
-  pullRequestId: number;  
-  repository: GitRepository;
-  reviewers: IdentityRefWithVote[];
-  sourceRefName: string;
-  status: string;
-  supportsIterations: boolean;
-  targetRefName: string;
-  title: string;
-  workItemRefs: ResourceRef[];
-}
-
-interface GitPullRequestWithLink extends GitPullRequest {
-  link: string;
-}
-
-interface GitRepository {
-  defaultBranch: string;
-  id: string;
-  isFork: boolean;
-  name: string;
-  project: object;
-  remoteUrl: string;
-  site: number;
-  sshUrl: string;
-  url: string;
-  validRemoteUrls: string[]
-}
-
-interface GitRepositoryWithPrCount extends GitRepository {
-  count: number;
-}
-
-interface IdentityRef {
-  displayName: string;
-  id: string;
-  imageUrl: string;
-  inactive: boolean;
-  profileUrl: string;
-  uniqueName: string;
-  url: string;
-}
-
-interface IdentityRefWithVote extends IdentityRef {
-  isRequired: true;
-  reviewerUrl: string;
-  vote: number;
-  votedFor: IdentityRefWithVote[]
-}
-
-interface IdentityRefWithPrCount extends IdentityRef {
-  count: number;
-}
-
-interface ResourceRef {
-  id: string;
-  url: string;
 }

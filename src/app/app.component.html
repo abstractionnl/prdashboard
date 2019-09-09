@@ -4,7 +4,7 @@
   <h1 class="text-center">
     PR Dashboard ({{(data$ | async)?.length}})
   </h1>
-  <app-configuration *ngIf="configure" (save)="updateConfiguration($event)"></app-configuration>  
+  <app-configuration *ngIf="configure" [model]="configuration" (save)="updateConfiguration($event)"></app-configuration>  
   <div *ngIf="!configure">
     <table class="table table-hover">
       <thead>
@@ -38,7 +38,8 @@
           <td><a [href]="pr.link" target="_blank">{{pr.pullRequestId}}</a></td>
           <td>{{pr.title}} 
             <span *ngIf="pr.isDraft" class="badge badge-secondary">draft</span> 
-            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger">conflicts</span><br />
+            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger">conflicts</span>
+            <span *ngIf="pr.currentAuthorReview; let reviewer" class="badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">reviewed</span><br />
             <small class="text-muted">{{stripRefHeads(pr.sourceRefName)}} into {{stripRefHeads(pr.targetRefName)}}</small>
           </td>
           <td>{{pr.repository.name}}</td>

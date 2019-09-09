@@ -2,13 +2,18 @@
 <form>
     <div class="form-group">
     <label for="pat">Pat</label>
-      <input type="text" class="form-control" name="pat" [(ngModel)]="model.pat" aria-describedby="patHelp" placeholder="Enter pat">
+      <input type="password" class="form-control" name="pat" [(ngModel)]="model.pat" aria-describedby="patHelp" placeholder="Enter pat">
       <small id="patHelp" class="form-text text-muted">Create a pat with read permission for Code.</small>
     </div>
     <div class="form-group">
       <label for="organization">Organization/project</label>
       <input type="text" class="form-control" name="organization" [(ngModel)]="model.organization" aria-describedby="organizationHelp" placeholder="Enter organization">
       <small id="organizationHelp" class="form-text text-muted">The part after https://dev.azure.com/. Eg: embrace/Embrace Suite</small>
+    </div>
+    <div class="form-group">
+      <label for="currentAuthorEmail">Your email</label>
+      <input type="text" class="form-control" name="currentAuthorEmail" [(ngModel)]="model.currentAuthorEmail" aria-describedby="currentAuthorEmailHelp" placeholder="Enter author email">
+      <small id="currentAuthorEmailHelp" class="form-text text-muted">Used to see if you have reviewed and/or has updates</small>
     </div>
 
     <button type="submit" class="btn btn-primary" [disabled]="!isValid()">Save</button>

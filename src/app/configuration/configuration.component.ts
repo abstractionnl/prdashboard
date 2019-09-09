@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ConfigurationModel } from './../configuration-model';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { ConfigurationModel } from './../models';
 
 @Component({
   selector: 'app-configuration',
@@ -8,12 +8,12 @@ import { ConfigurationModel } from './../configuration-model';
 })
 export class ConfigurationComponent implements OnInit {
 
-  model: ConfigurationModel;
+  @Input() model: ConfigurationModel;
 
   @Output() save = new EventEmitter<ConfigurationModel>();
 
   constructor() { 
-    this.model = { pat: "", organization: "" };
+    //this.model = { pat: "", organization: "" };
   }
 
   ngOnInit() {
