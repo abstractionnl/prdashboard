@@ -39,7 +39,8 @@
           <td>{{pr.title}} 
             <span *ngIf="pr.isDraft" class="badge badge-secondary">draft</span> 
             <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger">conflicts</span>
-            <span *ngIf="pr.currentAuthorReview; let reviewer" class="badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">reviewed</span><br />
+            <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
+            <br />
             <small class="text-muted">{{pr.sourceRefName | stripRefHeads}} into {{pr.targetRefName | stripRefHeads}}</small>
           </td>
           <td>{{pr.repository.name}}</td>
@@ -49,7 +50,7 @@
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
               <span *ngIf="reviewer.vote != 0" class="badge position-relative" >
                 <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">&nbsp;</span>
-                <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{getVoteStatus(reviewer.vote)}} by {{reviewer.displayName}}" />
+                <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}" />
               </span>
             </span>
           </td>

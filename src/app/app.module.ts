@@ -10,6 +10,7 @@ import localeNl from '@angular/common/locales/nl';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { StripRefHeadsPipe } from './strip-ref-heads.pipe';
+import { VoteStatusPipe } from './vote-status.pipe';
 registerLocaleData(localeNl, 'nl');
 
 @NgModule({
@@ -17,7 +18,8 @@ registerLocaleData(localeNl, 'nl');
     AppComponent,
     ConfigurationComponent,
     DropdownComponent,
-    StripRefHeadsPipe
+    StripRefHeadsPipe,
+    VoteStatusPipe
   ],
   imports: [
     BrowserModule,
