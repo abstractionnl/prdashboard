@@ -137,10 +137,6 @@ export class AppComponent {
     return item.id;
   }
 
-  stripRefHeads(refname: string) {
-    return refname.replace("refs/heads/", "");
-  }
-
   getVoteStatus(vote: number) {
     switch (vote) {
       case 0: return 'no vote';

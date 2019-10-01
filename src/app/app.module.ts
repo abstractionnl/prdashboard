@@ -9,13 +9,15 @@ import { registerLocaleData } from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
+import { StripRefHeadsPipe } from './strip-ref-heads.pipe';
 registerLocaleData(localeNl, 'nl');
 
 @NgModule({
   declarations: [
     AppComponent,
     ConfigurationComponent,
-    DropdownComponent
+    DropdownComponent,
+    StripRefHeadsPipe
   ],
   imports: [
     BrowserModule,
