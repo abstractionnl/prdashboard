@@ -3,6 +3,11 @@ export interface Filters {
   creator: any;
 }
 
+export interface ArrayResult<T> {
+  count: number;
+  value: T[];
+}
+
 export interface GitPullRequest {
   artifactId: string;
   closedBy?: IdentityRef;

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { DevopsService } from './devops-service.service';
 import { Observable, Subject, BehaviorSubject, throwError, timer } from 'rxjs';
 import { map, concatMap, combineLatest, share, publish, refCount, withLatestFrom, skip, shareReplay } from 'rxjs/operators';
 import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepositoryWithPrCount, IdentityRefWithPrCount, ConfigurationModel } from './models';
@@ -9,65 +9,38 @@ import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepo
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   data$ : Observable<ExtendedGitPullRequest[]>;
   filter$: Subject<Filters> = new BehaviorSubject<Filters>({ repository: null, creator: null });  
   repositories$: Observable<GitRepositoryWithPrCount[]>;
   creators$: Observable<IdentityRefWithPrCount[]>;
 
   configure: boolean;
-  configuration: ConfigurationModel;
-
   trigger$ = timer(0, 30000); 
   
-  constructor(private http: HttpClient) {    
-    var configuration = window.localStorage.getItem('configuration');
-    if (configuration) {
-      this.configuration = JSON.parse(configuration);
-      this.setupData();      
-    } else {
-      this.configure = true;
-    }
+  ngOnInit() {
+    this.configure = !this.service.isConfigured();
 
-    /*var filters = window.localStorage.getItem('filters');
-    if (filters) {
-      this.filter$.next(JSON.parse(filters));
-    }
+    if (this.service.isConfigured())
+      this.setupData();
+  }
 
-    this.filter$.pipe(skip(1)).subscribe(filters => {
-      window.localStorage.setItem('filters', JSON.stringify(filters));
-    })*/     
+  constructor(private service: DevopsService) { 
   }
 
   setupData() {
-    const headers = {
-      'Authorization': 'Basic ' + btoa('pat:' + this.configuration.pat)
-    };
-
-    const organization = this.configuration.organization;
-    const currentAuthorEmail = this.configuration.currentAuthorEmail;
-
-    const dataUri = `https://dev.azure.com/${organization}/_apis/git/pullrequests?api-version=5.0&status=active`;
-    const repositoriesUri = `https://dev.azure.com/${organization}/_apis/git/repositories?api-version=5.0`;
-
-    const loadData$ = this.http.get(dataUri, { headers: headers })
-      .pipe(map(val => <GitPullRequest[]>(<any>val).value));
-
-    const loadRepositories$ = this.http.get(repositoriesUri, { headers: headers })
-      .pipe(map(val => <GitRepository[]>(<any>val).value));      
-
     const loadedData$ = this.trigger$
       .pipe(
-        concatMap(_ => loadData$),
+        concatMap(_ => this.service.getPullRequests()),
         map(data => data.map(pr => ({
           ...pr, 
-          link: `https://dev.azure.com/${organization}/_git/${pr.repository.name}/pullrequest/${pr.pullRequestId}`,
-          currentAuthorReview: pr.reviewers.find(reviewer => reviewer.uniqueName == currentAuthorEmail)
+          link: `https://dev.azure.com/${this.service.configuration.organization}/_git/${pr.repository.name}/pullrequest/${pr.pullRequestId}`,
+          currentAuthorReview: pr.reviewers.find(reviewer => reviewer.uniqueName == this.service.configuration.currentAuthorEmail),
         }))), 
         shareReplay(1)
       );
 
-    const loadedRepositories$ = loadRepositories$
+    const loadedRepositories$ = this.service.getRepositories()
       .pipe(
         map(repos => repos.sort((n1, n2) => n1.name < n2.name ? -1 : (n1.name > n2.name ? 1 : 0))),
         shareReplay(1)
@@ -118,11 +91,12 @@ export class AppComponent {
   }
 
   updateConfiguration(config: ConfigurationModel) {
-    this.configuration = config;
-    this.setupData();
-    this.configure = false;
-
-    window.localStorage.setItem('configuration', JSON.stringify(config));
+    this.service.updateConfiguration(config);
+    
+    if (this.service.isConfigured()) {
+      this.configure = false;
+      this.setupData();
+    }
   }
 
   identifyPr(index, item) {

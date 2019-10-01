@@ -4,7 +4,7 @@
   <h1 class="text-center">
     PR Dashboard ({{(data$ | async)?.length}})
   </h1>
-  <app-configuration *ngIf="configure" [model]="configuration" (save)="updateConfiguration($event)"></app-configuration>  
+  <app-configuration *ngIf="configure" [model]="service.configuration" (save)="updateConfiguration($event)"></app-configuration>  
   <div *ngIf="!configure">
     <table class="table table-hover">
       <thead>
