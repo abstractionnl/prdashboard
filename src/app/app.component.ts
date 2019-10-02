@@ -36,6 +36,8 @@ export class AppComponent implements OnInit {
           ...pr, 
           link: `https://dev.azure.com/${this.service.configuration.organization}/_git/${pr.repository.name}/pullrequest/${pr.pullRequestId}`,
           currentAuthorReview: pr.reviewers.find(reviewer => reviewer.uniqueName == this.service.configuration.currentAuthorEmail),
+          visited: window.localStorage.getItem(`pr.${pr.pullRequestId}.lastMergeSourceCommit`) != null,
+          updated: window.localStorage.getItem(`pr.${pr.pullRequestId}.lastMergeSourceCommit`) != pr.lastMergeSourceCommit.commitId
         }))), 
         shareReplay(1)
       );
@@ -88,6 +90,11 @@ export class AppComponent implements OnInit {
           count: data.filter(pr => pr.createdBy.id == creator.id).length
         })))
       );
+  }
+
+  visitPr(pr: GitPullRequest) {
+    // Save the lastMergeSourceCommit for this pr
+    window.localStorage.setItem(`pr.${pr.pullRequestId}.lastMergeSourceCommit`, pr.lastMergeSourceCommit.commitId);
   }
 
   updateConfiguration(config: ConfigurationModel) {
