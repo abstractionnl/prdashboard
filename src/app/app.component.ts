@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
       this.setupData();
   }
 
-  constructor(private service: DevopsService) { 
+  constructor(public service: DevopsService) { 
   }
 
   setupData() {
