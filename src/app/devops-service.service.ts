@@ -17,6 +17,8 @@ export class DevopsService {
     var configuration = window.localStorage.getItem('configuration');
     if (configuration) {
       this.configuration = JSON.parse(configuration);
+    } else {
+      this.configuration = {pat:'', organization: '', currentAuthorEmail: ''};
     }
   }
 
@@ -42,7 +44,7 @@ export class DevopsService {
   }
 
   isConfigured(): boolean {
-    return this.configuration != null;
+    return this.configuration != null && this.configuration.pat != '' && this.configuration.organization != '';
   }
 
   updateConfiguration(config: ConfigurationModel) {
