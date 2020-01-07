@@ -23,7 +23,7 @@ export class DevopsService {
   }
 
   getPullRequests() {
-    return this.fetch<ArrayResult<GitPullRequest>>(`https://dev.azure.com/${this.configuration.organization}/_apis/git/pullrequests?api-version=5.0&status=active`)
+    return this.fetch<ArrayResult<GitPullRequest>>(`https://dev.azure.com/${this.configuration.organization}/_apis/git/pullrequests?api-version=5.0&status=active&$top=250`)
         .pipe(map(result => result.value));
   }
 
