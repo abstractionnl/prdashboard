@@ -9,7 +9,7 @@
     <table class="table table-hover">
       <thead>
         <th style="width: 100px">#</th>
-        <th>Title</th>
+        <th>Title <label class="float-right"><input type="checkbox" #inputEL name="showDrafts" [checked]="(filter$ | async).showDrafts" (change)="showDrafts(inputEL.checked)" /> Show drafts</label></th>
         <th style="width: 250px">
           <app-dropdown 
             title="Repository" 

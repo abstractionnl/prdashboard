@@ -11,7 +11,7 @@ import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepo
 })
 export class AppComponent implements OnInit {
   data$ : Observable<ExtendedGitPullRequest[]>;
-  filter$: Subject<Filters> = new BehaviorSubject<Filters>({ repository: null, creator: null });  
+  filter$: BehaviorSubject<Filters> = new BehaviorSubject<Filters>({ repository: null, creator: null, showDrafts: false });  
   repositories$: Observable<GitRepositoryWithPrCount[]>;
   creators$: Observable<IdentityRefWithPrCount[]>;
 
@@ -57,6 +57,10 @@ export class AppComponent implements OnInit {
           if (filters.creator) {
             data = data.filter(pr => pr.createdBy.id == filters.creator.id);
           }
+          if (!filters.showDrafts) {
+            data = data.filter(pr => !pr.isDraft);
+          }
+
           return data; 
         }),
         shareReplay(1)
@@ -120,15 +124,22 @@ export class AppComponent implements OnInit {
 
   selectRepo(repo) {
     this.filter$.next({
-      repository: repo,
-      creator: null
+      ...this.filter$.getValue(),
+      repository: repo
     }); 
   }
 
   selectCreator(creator) {
     this.filter$.next({
-      repository: null,
+      ...this.filter$.getValue(),
       creator: creator
+    });
+  }
+
+  showDrafts(enabled) {
+    this.filter$.next({
+      ...this.filter$.getValue(),
+      showDrafts: enabled
     });
   }
 }

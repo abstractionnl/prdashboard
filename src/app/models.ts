@@ -1,6 +1,7 @@
 export interface Filters {
   repository: any;
   creator: any;
+  showDrafts: boolean;
 }
 
 export interface ArrayResult<T> {
