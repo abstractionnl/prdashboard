@@ -14,9 +14,10 @@
           <app-dropdown 
             title="Repository" 
             [options]="repositories$ | async" 
-            [selection]="(filter$ | async).repository" 
+            [selection]="(filter$ | async).repositories" 
             (onSelect)="selectRepo($event)" 
-            [trackBy]="trackById">
+            [trackBy]="trackById"
+            multiselect="true">
             <ng-template let-repo>{{repo.name}} ({{repo.count}})</ng-template>
           </app-dropdown>
         </th>
@@ -25,9 +26,10 @@
           <app-dropdown 
             title="Created By" 
             [options]="creators$ | async" 
-            [selection]="(filter$ | async).creator" 
+            [selection]="(filter$ | async).creators" 
             (onSelect)="selectCreator($event)" 
-            [trackBy]="trackById">
+            [trackBy]="trackById"
+            multiselect="true">
             <ng-template let-creator>{{creator.displayName}} ({{creator.count}})</ng-template>
           </app-dropdown>
         </th>

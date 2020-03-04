@@ -1,6 +1,6 @@
 export interface Filters {
-  repository: any;
-  creator: any;
+  repositories: any[];
+  creators: any[];
   showDrafts: boolean;
 }
 

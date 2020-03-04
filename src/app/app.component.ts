@@ -11,7 +11,7 @@ import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepo
 })
 export class AppComponent implements OnInit {
   data$ : Observable<ExtendedGitPullRequest[]>;
-  filter$: BehaviorSubject<Filters> = new BehaviorSubject<Filters>({ repository: null, creator: null, showDrafts: false });  
+  filter$: BehaviorSubject<Filters> = new BehaviorSubject<Filters>({ repositories: null, creators: null, showDrafts: false });  
   repositories$: Observable<GitRepositoryWithPrCount[]>;
   creators$: Observable<IdentityRefWithPrCount[]>;
 
@@ -51,11 +51,11 @@ export class AppComponent implements OnInit {
       this.data$ = loadedData$.pipe(
         combineLatest(this.filter$),
         map(([data, filters]) => {
-          if (filters.repository) {
-            data = data.filter(pr => pr.repository.name == filters.repository.name);
+          if (filters.repositories && filters.repositories.length > 0) {
+            data = data.filter(pr => filters.repositories.map(x => x.name).includes(pr.repository.name));
           }
-          if (filters.creator) {
-            data = data.filter(pr => pr.createdBy.id == filters.creator.id);
+          if (filters.creators && filters.creators.length > 0) {
+            data = data.filter(pr => filters.creators.map(x => x.id).includes(pr.createdBy.id));
           }
           if (!filters.showDrafts) {
             data = data.filter(pr => !pr.isDraft);
@@ -122,17 +122,17 @@ export class AppComponent implements OnInit {
     return item.id;
   }
 
-  selectRepo(repo) {
+  selectRepo(repos) {
     this.filter$.next({
       ...this.filter$.getValue(),
-      repository: repo
+      repositories: repos
     }); 
   }
 
-  selectCreator(creator) {
+  selectCreator(creators) {
     this.filter$.next({
       ...this.filter$.getValue(),
-      creator: creator
+      creators: creators
     });
   }
 

@@ -1,14 +1,14 @@
 <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="toggle" id="repoSelection" data-toggle="dropdown" aria-haspopup="true">
-        <ng-container *ngIf="selection; else all">{{title}}: <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:selection}"></ng-container></ng-container>
-        <ng-template #all>
-            {{title}}: All
-        </ng-template>
+        <span *ngIf="getSelection().length == 0">{{title}}: All</span>
+        <ng-container *ngIf="getSelection().length >= 1"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:getSelection()[0]}"></ng-container></ng-container>
+        <span *ngIf="getSelection().length > 1">(+{{getSelection().length-1}})</span>
     </button>
     <div class="dropdown-menu" aria-labelledby="repoSelection">
       <a class="dropdown-item" (click)="selectOption(null)" [class.active]="isSelected(null)">All</a>
-      <a class="dropdown-item" href="#" *ngFor="let option of options" (click)="selectOption(option)" [class.active]="isSelected(option)">
-          <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container>
+      <a class="dropdown-item" href="#" *ngFor="let option of options" [class.active]="isSelected(option)">
+        <input type="checkbox" class="form-check-input" [checked]="isSelected(option)" (change)="toggleOption(option, $event.target.checked)" *ngIf="multiselect" />  
+        <div (click)="selectOption(option)"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container></div>
       </a>
     </div>
   </div>
