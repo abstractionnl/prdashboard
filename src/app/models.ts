@@ -1,9 +1,3 @@
-export interface Filters {
-  repositories: string[];
-  creators: string[];
-  showDrafts: boolean;
-}
-
 export interface ArrayResult<T> {
   count: number;
   value: T[];

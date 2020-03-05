@@ -6,7 +6,7 @@
     </button>
     <div class="dropdown-menu" aria-labelledby="repoSelection">
       <a class="dropdown-item" (click)="selectOption(null)" [class.active]="isSelected(null)">All</a>
-      <a class="dropdown-item" href="#" *ngFor="let option of options" [class.active]="isSelected(option)">
+      <a class="dropdown-item" href="javascript:void(0)" *ngFor="let option of options" [class.active]="isSelected(option)">
         <input type="checkbox" class="form-check-input" [checked]="isSelected(option)" (change)="toggleOption(option, $event.target.checked)" *ngIf="multiselect" />  
         <div (click)="selectOption(option)"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container></div>
       </a>

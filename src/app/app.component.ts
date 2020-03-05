@@ -1,31 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { DevopsService } from './devops-service.service';
-import { Observable, Subject, BehaviorSubject, throwError, timer } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, throwError, timer, Subscription, SubscriptionLike } from 'rxjs';
 import { map, concatMap, combineLatest, share, publish, refCount, withLatestFrom, skip, shareReplay } from 'rxjs/operators';
-import { Filters, GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepositoryWithPrCount, IdentityRefWithPrCount, ConfigurationModel } from './models';
+import { GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepositoryWithPrCount, IdentityRefWithPrCount, ConfigurationModel } from './models';
+import { Filters, encodeFilter, decodeFilter } from './filters';
 
 @Component({
   selector: 'app-root',
+  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   data$ : Observable<ExtendedGitPullRequest[]>;
   filter$: BehaviorSubject<Filters> = new BehaviorSubject<Filters>({ repositories: null, creators: null, showDrafts: false });  
   repositories$: Observable<GitRepositoryWithPrCount[]>;
   creators$: Observable<IdentityRefWithPrCount[]>;
 
   configure: boolean;
-  trigger$ = timer(0, 30000); 
+  trigger$ = timer(0, 30000);
+
+  filterLocationSubscription: Subscription;
+  locationServiceSubscription: SubscriptionLike;
   
   ngOnInit() {
     this.configure = !this.service.isConfigured();
 
     if (this.service.isConfigured())
       this.setupData();
+
+    this.locationServiceSubscription = this.locationService.subscribe((popState) => {
+      this.filter$.next(decodeFilter(popState.url));
+    });
+
+    this.filter$.next(decodeFilter(this.locationService.path()));
+
+    this.filterLocationSubscription = this.filter$
+      .pipe(skip(1))  // Skip the first, as it is the intial state without any filter
+      .subscribe(filter => this.locationService.replaceState('', encodeFilter(filter)))
   }
 
-  constructor(public service: DevopsService) { 
+  ngOnDestroy() {
+    this.filterLocationSubscription.unsubscribe();
+    this.locationServiceSubscription.unsubscribe();
+  }
+  
+  constructor(public service: DevopsService, private locationService: Location) { 
+
   }
 
   setupData() {
