@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.setupData();
 
     this.locationServiceSubscription = this.locationService.subscribe((popState) => {
+      console.log('popstate');
       this.filter$.next(decodeFilter(popState.url));
     });
 
@@ -38,7 +39,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.filterLocationSubscription = this.filter$
       .pipe(skip(1))  // Skip the first, as it is the intial state without any filter
-      .subscribe(filter => this.locationService.replaceState('', encodeFilter(filter)))
+      .subscribe(filter => {
+        
+        console.log('filter update', filter);
+        this.locationService.replaceState('', encodeFilter(filter))
+      });
   }
 
   ngOnDestroy() {

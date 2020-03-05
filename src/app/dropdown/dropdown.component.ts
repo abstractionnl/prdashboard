@@ -15,10 +15,10 @@ export class DropdownComponent implements OnInit {
   set selection(value: any) {
     if (value == null)
       this._selection = [];
-    else if (!this.multiselect)
-      this._selection = [value];
-    else
+    else if (Array.isArray(value))
       this._selection = value;
+    else
+      this._selection = [value];
   }
 
   @Input() trackBy: (option: any) => any;
