@@ -16,7 +16,7 @@
             [options]="repositories$ | async" 
             [selection]="(filter$ | async).repositories" 
             (onSelect)="selectRepo($event)" 
-            [trackBy]="trackById"
+            [trackBy]="trackByName"
             multiselect="true">
             <ng-template let-repo>{{repo.name}} ({{repo.count}})</ng-template>
           </app-dropdown>

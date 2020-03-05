@@ -52,10 +52,10 @@ export class AppComponent implements OnInit {
         combineLatest(this.filter$),
         map(([data, filters]) => {
           if (filters.repositories && filters.repositories.length > 0) {
-            data = data.filter(pr => filters.repositories.map(x => x.name).includes(pr.repository.name));
+            data = data.filter(pr => filters.repositories.includes(pr.repository.name));
           }
           if (filters.creators && filters.creators.length > 0) {
-            data = data.filter(pr => filters.creators.map(x => x.id).includes(pr.createdBy.id));
+            data = data.filter(pr => filters.creators.includes(pr.createdBy.id));
           }
           if (!filters.showDrafts) {
             data = data.filter(pr => !pr.isDraft);
@@ -120,6 +120,10 @@ export class AppComponent implements OnInit {
 
   trackById(item) {
     return item.id;
+  }
+
+  trackByName(item) {
+    return item.name;
   }
 
   selectRepo(repos) {

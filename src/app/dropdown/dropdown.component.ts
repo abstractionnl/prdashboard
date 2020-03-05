@@ -8,7 +8,19 @@ import { Component, TemplateRef, ContentChild, OnInit, EventEmitter, Output, Inp
 export class DropdownComponent implements OnInit {
   @Input() title: string;
   @Input() options: any[];
-  @Input() selection: any;
+
+  _selection: any[] = [];
+
+  @Input('selection') 
+  set selection(value: any) {
+    if (value == null)
+      this._selection = [];
+    else if (!this.multiselect)
+      this._selection = [value];
+    else
+      this._selection = value;
+  }
+
   @Input() trackBy: (option: any) => any;
   @Input() multiselect: boolean;
   @Output() onSelect = new EventEmitter<any>();
@@ -20,17 +32,16 @@ export class DropdownComponent implements OnInit {
   id(x: any) { return x; }
 
   hasSelection() {
-    return this.getSelection().length > 0;
+    return this._selection.length > 0;
   }
 
   getSelection(): any[] {
-    if (this.selection == null)
+    const trackFn = this.trackBy || this.id;
+
+    if (!this.options)
       return [];
 
-    if (!this.multiselect)
-      return [this.selection]
-
-    return this.selection;
+    return this.options.filter(x => this._selection.includes(trackFn(x)));
   }
 
   isSelected(option) {
@@ -39,14 +50,16 @@ export class DropdownComponent implements OnInit {
 
     const trackFn = this.trackBy || this.id;
 
-    return this.getSelection().map(trackFn).includes(trackFn(option));
+    return this._selection.includes(trackFn(option));
   }
 
   selectOption(option) {
+    const trackFn = this.trackBy || this.id;
+
     if (this.multiselect) {
-      this.onSelect.emit(option != null ? [option] : []);
+      this.onSelect.emit(option != null ? [trackFn(option)] : []);
     } else if (!this.isSelected(option))
-      this.onSelect.emit(option);
+      this.onSelect.emit(trackFn(option));
   }
 
   toggleOption(option, enabled) {
@@ -54,13 +67,13 @@ export class DropdownComponent implements OnInit {
       return this.selectOption(enabled ? option : null);
 
     const isSelected = this.isSelected(option);
+    const trackFn = this.trackBy || this.id;
 
     if (enabled && !isSelected) {
-      var newSelection = this.getSelection().concat([option])
+      var newSelection = this._selection.concat([trackFn(option)])
       this.onSelect.emit(newSelection);
     } else if (!enabled && isSelected) {
-      const trackFn = this.trackBy || this.id;
-      var newSelection = this.getSelection().filter(x => trackFn(x) != trackFn(option))
+      var newSelection = this._selection.filter(x => x != trackFn(option))
       this.onSelect.emit(newSelection);
     }    
   }
