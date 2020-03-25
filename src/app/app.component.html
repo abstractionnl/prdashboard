@@ -33,7 +33,7 @@
             <ng-template let-creator>{{creator.displayName}} ({{creator.count}})</ng-template>
           </app-dropdown>
         </th>
-        <th style="width: 150px">Reviewers</th>
+        <th style="width: 175px">Reviewers</th>
       </thead>
       <tbody>
         <tr *ngFor="let pr of data$ | async; trackBy: identifyPr">
@@ -51,7 +51,7 @@
           <td><img [src]="pr.createdBy.imageUrl" style="height: 33px;" class="rounded" /> {{pr.createdBy.displayName}}</td>
           <td>
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
-              <span *ngIf="reviewer.vote != 0" class="badge position-relative" >
+              <span *ngIf="reviewer.vote != 0 && !reviewer.isContainer" class="badge position-relative" >
                 <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">&nbsp;</span>
                 <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}" />
               </span>
