@@ -11,14 +11,15 @@ import { ArrayResult, GitRepository, GitPullRequest, ExtendedGitPullRequest, Git
 })
 export class DevopsService {
 
-  configuration: ConfigurationModel;
+  static defaultConfig: ConfigurationModel = {pat:'', organization: '', currentAuthorEmail: '', theme: 'flatly'};
+  public configuration: ConfigurationModel;
 
   constructor(private http: HttpClient) {
     var configuration = window.localStorage.getItem('configuration');
     if (configuration) {
-      this.configuration = JSON.parse(configuration);
+      this.configuration = {...DevopsService.defaultConfig, ...JSON.parse(configuration)};
     } else {
-      this.configuration = {pat:'', organization: '', currentAuthorEmail: ''};
+      this.configuration = DevopsService.defaultConfig;
     }
   }
 

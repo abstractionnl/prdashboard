@@ -150,4 +150,5 @@ export interface ConfigurationModel {
     pat: string;
     organization: string;
     currentAuthorEmail: string;
+    theme: string;
   }  
