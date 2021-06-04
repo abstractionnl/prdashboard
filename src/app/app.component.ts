@@ -128,6 +128,11 @@ export class AppComponent implements OnInit, OnDestroy {
     window.localStorage.setItem(`pr.${pr.pullRequestId}.lastMergeSourceCommit`, pr.lastMergeSourceCommit.commitId);
   }
 
+  setTheme(name: string) {
+    var newConfig = {...this.service.configuration, theme: name};
+    this.service.updateConfiguration(newConfig);
+  }
+
   updateConfiguration(config: ConfigurationModel) {
     this.service.updateConfiguration(config);
     

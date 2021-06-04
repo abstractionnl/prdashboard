@@ -1,9 +1,20 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/flatly/bootstrap.min.css" [disabled]="service.configuration.theme != 'flatly'" id="flatlyTheme" integrity="sha256-+anKrX3Z/K1L31IR1Dlpi7C+/IA6MDj4TNBUsiwTP3A=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/darkly/bootstrap.min.css" [disabled]="service.configuration.theme != 'darkly'" id="darklyTheme" integrity="sha256-CETRC0luEnm32Z1z91BT8xqiKfIzbspZ64YCq3T63xk=" crossorigin="anonymous">
+
 <div>
-  <button type="button" class="float-right btn btn-outline-secondary" [class.active]="configure" (click)="configure = !configure">Configure</button>
-  <h1 class="text-center">
-    PR Dashboard ({{(data$ | async)?.length}})
-  </h1>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <h1 class="navbar-brand"> PR Dashboard ({{(data$ | async)?.length}})</h1>
+      <div class="float-right">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn" [class.btn-outline-info]="service.configuration.theme != 'flatly'" [class.btn-info]="service.configuration.theme == 'flatly'" (click)="setTheme('flatly')">l</button>
+          <button type="button" class="btn" [class.btn-outline-info]="service.configuration.theme != 'darkly'" [class.btn-info]="service.configuration.theme == 'darkly'" (click)="setTheme('darkly')">d</button>          
+        </div> 
+        <button type="button" class="btn btn-outline-secondary" [class.active]="configure" (click)="configure = !configure">Configure</button>
+      </div>       
+    </div>
+  </nav>
+  
   <app-configuration *ngIf="configure" [model]="service.configuration" (save)="updateConfiguration($event)"></app-configuration>  
   <div *ngIf="!configure">
     <table class="table table-hover">
