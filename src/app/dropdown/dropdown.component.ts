@@ -25,7 +25,7 @@ export class DropdownComponent implements OnInit {
   @Input() multiselect: boolean;
   @Output() onSelect = new EventEmitter<any>();
 
-  @ContentChild(TemplateRef, { static: false }) itemTemplate: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
 
   constructor() { }
 
