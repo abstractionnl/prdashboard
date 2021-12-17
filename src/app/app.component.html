@@ -52,6 +52,7 @@
           <td>{{pr.title}} 
             <span *ngIf="pr.isDraft" class="badge badge-secondary">draft</span> 
             <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger">conflicts</span>
+            <span *ngIf="pr.autoCompleteSetBy" class="badge badge-light">auto complete</span>
             <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
             <span *ngIf="pr.visited && pr.updated" class="badge badge-info">updated</span>
             <br />
