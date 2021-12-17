@@ -50,11 +50,11 @@
         <tr *ngFor="let pr of data$ | async; trackBy: identifyPr">
           <td><a [href]="pr.link" (click)="visitPr(pr)" (auxclick)="$event.which == 2 ? visitPr(pr) : false" target="_blank">{{pr.pullRequestId}}</a></td>
           <td>{{pr.title}} 
-            <span *ngIf="pr.isDraft" class="badge badge-secondary mx-1">draft</span> 
-            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger mx-1">conflicts</span>
-            <span *ngIf="pr.autoCompleteSetBy" class="badge badge-light mx-1">auto complete</span>
-            <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge mx-1" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
-            <span *ngIf="pr.visited && pr.updated" class="badge badge-info" mx-1>updated</span>
+            <span *ngIf="pr.isDraft" class="badge badge-secondary ml-1">draft</span> 
+            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger ml-1">conflicts</span>
+            <span *ngIf="pr.autoCompleteSetBy" class="badge badge-light ml-1">auto complete</span>
+            <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge ml-1" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
+            <span *ngIf="pr.visited && pr.updated" class="badge badge-info" ml-1>updated</span>
             <br />
             <small class="text-muted">{{pr.sourceRefName | stripRefHeads}} into {{pr.targetRefName | stripRefHeads}}</small>
           </td>
