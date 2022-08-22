@@ -1,4 +1,3 @@
-import { stringify } from 'querystring';
 import * as short from "short-uuid";
 
 let translator = short();
