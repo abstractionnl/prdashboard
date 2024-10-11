@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -13,20 +13,15 @@ import { StripRefHeadsPipe } from './strip-ref-heads.pipe';
 import { VoteStatusPipe } from './vote-status.pipe';
 registerLocaleData(localeNl, 'nl');
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    ConfigurationComponent,
-    DropdownComponent,
-    StripRefHeadsPipe,
-    VoteStatusPipe
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+@NgModule({ declarations: [
+        AppComponent,
+        ConfigurationComponent,
+        DropdownComponent,
+        StripRefHeadsPipe,
+        VoteStatusPipe
+    ],
+    bootstrap: [AppComponent], 
+    imports: [BrowserModule, FormsModule], 
+    providers: [provideHttpClient(withInterceptorsFromDi())] 
 })
 export class AppModule { }

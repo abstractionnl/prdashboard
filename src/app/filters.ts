@@ -1,6 +1,6 @@
-import * as short from "short-uuid";
+import short from "short-uuid";
 
-let translator = short();
+const translator = short();
 
 export interface Filters {
     repositories: string[];
