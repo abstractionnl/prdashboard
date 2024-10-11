@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "prdashboard:build"
+            "buildTarget": "prdashboard:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "prdashboard:build:production"
+              "buildTarget": "prdashboard:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "prdashboard:build"
+            "buildTarget": "prdashboard:build"
           }
         },
         "test": {
