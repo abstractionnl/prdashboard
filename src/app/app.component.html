@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/flatly/bootstrap.min.css" [disabled]="service.configuration.theme != 'flatly'" id="flatlyTheme" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/darkly/bootstrap.min.css" [disabled]="service.configuration.theme != 'darkly'" id="darklyTheme" crossorigin="anonymous">
+
 <div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
@@ -6,8 +9,8 @@
         <div class="btn-group" role="group">
           <button type="button" class="btn" [class.btn-outline-info]="service.configuration.theme != 'flatly'" [class.btn-info]="service.configuration.theme == 'flatly'" (click)="setTheme('flatly')">l</button>
           <button type="button" class="btn" [class.btn-outline-info]="service.configuration.theme != 'darkly'" [class.btn-info]="service.configuration.theme == 'darkly'" (click)="setTheme('darkly')">d</button>          
+          <button type="button" class="btn btn-outline-secondary" [class.active]="configure" (click)="configure = !configure">Configure</button>
         </div> 
-        <button type="button" class="btn btn-outline-secondary" [class.active]="configure" (click)="configure = !configure">Configure</button>
       </div>       
     </div>
   </nav>
@@ -59,12 +62,12 @@
           </td>
           <td>{{pr.repository.name}}</td>
           <td>{{pr.creationDate | date : 'mediumDate' : undefined : 'nl'}}</td>
-          <td><img [src]="pr.createdBy.imageUrl" style="height: 33px;" class="rounded" /> {{pr.createdBy.displayName}}</td>
+          <td><img [src]="pr.createdBy.imageUrl" style="height: 33px;" class="rounded" crossorigin="use-credentials"/> {{pr.createdBy.displayName}}</td>
           <td>
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
               <span *ngIf="reviewer.vote != 0 && !reviewer.isContainer" class="badge position-relative" >
                 <span class="notify-badge badge" [class.text-bg-success]="reviewer.vote > 0" [class.text-bg-warning]="reviewer.vote == -5" [class.text-bg-danger]="reviewer.vote == -10">&nbsp;</span>
-                <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}" />
+                <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}"  crossorigin="use-credentials" />
               </span>
             </span>
           </td>

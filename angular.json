@@ -26,10 +26,6 @@
               "src/favicon.png",
               "src/assets"
             ],
-            "styles": [
-              "node_modules/bootswatch/dist/flatly/bootstrap.min.css",
-              "src/styles.css"
-            ],
             "scripts": [],
             "extractLicenses": false,
             "sourceMap": true,
