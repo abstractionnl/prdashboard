@@ -50,7 +50,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let pr of data$ | async; trackBy: identifyPr">
-          <th scope="row"><a [href]="pr.link" (click)="visitPr(pr)" (auxclick)="$event.which == 2 ? visitPr(pr) : false" target="_blank">{{pr.pullRequestId}}</a></th>
+          <td>
+            <a [href]="pr.link" (click)="visitPr(pr)" (auxclick)="$event.which == 2 ? visitPr(pr) : false" target="_blank"
+              class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">{{pr.pullRequestId}}</a>
+          </td>
           <td>{{pr.title}} 
             <span *ngIf="pr.isDraft" class="badge text-bg-secondary ml-1">draft</span> 
             <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge text-bg-danger ml-1">conflicts</span>
