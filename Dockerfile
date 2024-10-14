@@ -11,4 +11,4 @@ RUN npm run build-prod
 
 FROM nginx:1.27-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /usr/src/app/dist/prdashboard /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/prdashboard/browser /usr/share/nginx/html
