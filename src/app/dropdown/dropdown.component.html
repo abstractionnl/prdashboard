@@ -1,14 +1,22 @@
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="toggle" id="repoSelection" data-toggle="dropdown" aria-haspopup="true">
-        <span *ngIf="getSelection().length == 0">{{title}}: All</span>
-        <ng-container *ngIf="getSelection().length >= 1"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:getSelection()[0]}"></ng-container></ng-container>
-        <span *ngIf="getSelection().length > 1">(+{{getSelection().length-1}})</span>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="repoSelection">
-      <a class="dropdown-item" (click)="selectOption(null)" [class.active]="isSelected(null)">All</a>
-      <a class="dropdown-item" href="javascript:void(0)" *ngFor="let option of options" [class.active]="isSelected(option)">
-        <input type="checkbox" class="form-check-input" [checked]="isSelected(option)" (change)="toggleOption(option, $event.target.checked)" *ngIf="multiselect" />  
-        <div (click)="selectOption(option)"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container></div>
+<div ngbDropdown autoClose="outside">
+    <a id="repoSelection" ngbDropdownToggle>
+        @if (getSelection().length == 0) { {{title}}: All }
+        @else if (getSelection().length >= 1) { {{title}}: <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:getSelection()[0]}"></ng-container> }
+        @if (getSelection().length > 1) {
+          (+{{getSelection().length-1}})
+        }
       </a>
+    <div aria-labelledby="repoSelection" ngbDropdownMenu>
+      <a ngbDropdownItem (click)="selectOption(null)" [class.active]="isSelected(null)">All</a>
+      @for (option of options; track $index) {
+        <div class="dropdown-item">
+          <div class="form-check">
+            @if (multiselect) { 
+              <input type="checkbox" class="form-check-input" [checked]="isSelected(option)" (change)="toggleOption(option, $event.target.checked)" /> 
+            }  
+            <label class="form-check-label" (click)="selectOption(option)"><ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit:option}"></ng-container></label>
+          </div>
+        </div>
+      }
     </div>
   </div>

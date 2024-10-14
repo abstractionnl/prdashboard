@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/flatly/bootstrap.min.css" [disabled]="service.configuration.theme != 'flatly'" id="flatlyTheme" integrity="sha256-+anKrX3Z/K1L31IR1Dlpi7C+/IA6MDj4TNBUsiwTP3A=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.0/dist/darkly/bootstrap.min.css" [disabled]="service.configuration.theme != 'darkly'" id="darklyTheme" integrity="sha256-CETRC0luEnm32Z1z91BT8xqiKfIzbspZ64YCq3T63xk=" crossorigin="anonymous">
-
 <div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
@@ -19,42 +16,44 @@
   <div *ngIf="!configure">
     <table class="table table-hover">
       <thead>
-        <th style="width: 100px">#</th>
-        <th>Title <label class="float-right"><input type="checkbox" #inputEL name="showDrafts" [checked]="(filter$ | async).showDrafts" (change)="showDrafts(inputEL.checked)" /> Show drafts</label></th>
-        <th style="width: 250px">
-          <app-dropdown 
-            title="Repository" 
-            [options]="repositories$ | async" 
-            [selection]="(filter$ | async).repositories" 
-            (onSelect)="selectRepo($event)" 
-            [trackBy]="trackByName"
-            multiselect="true">
-            <ng-template let-repo>{{repo.name}} ({{repo.count}})</ng-template>
-          </app-dropdown>
-        </th>
-        <th style="width: 150px">Created on</th>
-        <th style="width: 250px">
-          <app-dropdown 
-            title="Created By" 
-            [options]="creators$ | async" 
-            [selection]="(filter$ | async).creators" 
-            (onSelect)="selectCreator($event)" 
-            [trackBy]="trackById"
-            multiselect="true">
-            <ng-template let-creator>{{creator.displayName}} ({{creator.count}})</ng-template>
-          </app-dropdown>
-        </th>
-        <th style="width: 175px">Reviewers</th>
+        <tr>
+          <th style="width: 100px">#</th>
+          <th>Title <label class="float-end"><input type="checkbox" #inputEL name="showDrafts" [checked]="(filter$ | async).showDrafts" (change)="showDrafts(inputEL.checked)" /> Show drafts</label></th>
+          <th style="width: 250px">
+            <app-dropdown 
+              title="Repository" 
+              [options]="repositories$ | async" 
+              [selection]="(filter$ | async).repositories" 
+              (onSelect)="selectRepo($event)" 
+              [trackBy]="trackByName"
+              multiselect="true">
+              <ng-template let-repo>{{repo.name}} ({{repo.count}})</ng-template>
+            </app-dropdown>
+          </th>
+          <th style="width: 150px">Created on</th>
+          <th style="width: 250px">
+            <app-dropdown 
+              title="Created By" 
+              [options]="creators$ | async" 
+              [selection]="(filter$ | async).creators" 
+              (onSelect)="selectCreator($event)" 
+              [trackBy]="trackById"
+              multiselect="true">
+              <ng-template let-creator>{{creator.displayName}} ({{creator.count}})</ng-template>
+            </app-dropdown>
+          </th>
+          <th style="width: 175px">Reviewers</th>
+        </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pr of data$ | async; trackBy: identifyPr">
-          <td><a [href]="pr.link" (click)="visitPr(pr)" (auxclick)="$event.which == 2 ? visitPr(pr) : false" target="_blank">{{pr.pullRequestId}}</a></td>
+          <th scope="row"><a [href]="pr.link" (click)="visitPr(pr)" (auxclick)="$event.which == 2 ? visitPr(pr) : false" target="_blank">{{pr.pullRequestId}}</a></th>
           <td>{{pr.title}} 
-            <span *ngIf="pr.isDraft" class="badge badge-secondary ml-1">draft</span> 
-            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge badge-danger ml-1">conflicts</span>
-            <span *ngIf="pr.autoCompleteSetBy" class="badge badge-light ml-1">auto complete</span>
-            <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge ml-1" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
-            <span *ngIf="pr.visited && pr.updated" class="badge badge-info" ml-1>updated</span>
+            <span *ngIf="pr.isDraft" class="badge text-bg-secondary ml-1">draft</span> 
+            <span *ngIf="pr.mergeStatus == 'conflicts'" class="badge text-bg-danger ml-1">conflicts</span>
+            <span *ngIf="pr.autoCompleteSetBy" class="badge text-bg-light ml-1">auto complete</span>
+            <ng-container *ngIf="pr.currentAuthorReview; let reviewer"><span *ngIf="reviewer.vote != 0" class="badge ml-1" [class.text-bg-success]="reviewer.vote > 0" [class.text-bg-warning]="reviewer.vote == -5" [class.text-bg-danger]="reviewer.vote == -10">{{reviewer.vote | voteStatus}}</span></ng-container>
+            <span *ngIf="pr.visited && pr.updated" class="badge text-bg-info" ml-1>updated</span>
             <br />
             <small class="text-muted">{{pr.sourceRefName | stripRefHeads}} into {{pr.targetRefName | stripRefHeads}}</small>
           </td>
@@ -64,7 +63,7 @@
           <td>
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
               <span *ngIf="reviewer.vote != 0 && !reviewer.isContainer" class="badge position-relative" >
-                <span class="notify-badge badge" [class.badge-success]="reviewer.vote > 0" [class.badge-warning]="reviewer.vote == -5" [class.badge-danger]="reviewer.vote == -10">&nbsp;</span>
+                <span class="notify-badge badge" [class.text-bg-success]="reviewer.vote > 0" [class.text-bg-warning]="reviewer.vote == -5" [class.text-bg-danger]="reviewer.vote == -10">&nbsp;</span>
                 <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}" />
               </span>
             </span>

@@ -11,6 +11,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { StripRefHeadsPipe } from './strip-ref-heads.pipe';
 import { VoteStatusPipe } from './vote-status.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 registerLocaleData(localeNl, 'nl');
 
 @NgModule({ declarations: [
@@ -21,7 +22,7 @@ registerLocaleData(localeNl, 'nl');
         VoteStatusPipe
     ],
     bootstrap: [AppComponent], 
-    imports: [BrowserModule, FormsModule], 
+    imports: [BrowserModule, FormsModule, NgbModule], 
     providers: [provideHttpClient(withInterceptorsFromDi())] 
 })
 export class AppModule { }
