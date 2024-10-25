@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { DevopsService } from './devops-service.service';
-import { Observable, Subject, BehaviorSubject, throwError, timer, Subscription, SubscriptionLike } from 'rxjs';
-import { map, concatMap, combineLatest, share, publish, refCount, withLatestFrom, skip, shareReplay } from 'rxjs/operators';
+import { Observable, Subject, BehaviorSubject, throwError, timer, Subscription, SubscriptionLike, ObservableInput } from 'rxjs';
+import { map, concatMap, combineLatest, share, publish, refCount, withLatestFrom, skip, shareReplay, switchMap } from 'rxjs/operators';
 import { GitRepository, GitPullRequest, ExtendedGitPullRequest, GitRepositoryWithPrCount, IdentityRefWithPrCount, ConfigurationModel } from './models';
 import { Filters, encodeFilter, decodeFilter } from './filters';
 
@@ -177,5 +177,28 @@ export class AppComponent implements OnInit, OnDestroy {
       ...this.filter$.getValue(),
       showDrafts: enabled
     });
+  }
+
+  imageCache = [];
+
+  fetchImage(imageUrl) {
+    if (!this.imageCache[imageUrl])
+      this.imageCache[imageUrl] = this.service.fetchImage(imageUrl)
+        .pipe(
+          switchMap(blob => {
+            var subject = new Subject();
+            const  reader = new FileReader(); 
+            reader.readAsDataURL(blob);
+            reader.onloadend = function() {
+              subject.next(reader.result);
+            }
+
+            return subject;
+          }), 
+          shareReplay(1)
+        );
+
+
+    return this.imageCache[imageUrl];
   }
 }

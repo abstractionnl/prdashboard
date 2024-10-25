@@ -65,12 +65,12 @@
           </td>
           <td>{{pr.repository.name}}</td>
           <td>{{pr.creationDate | date : 'mediumDate' : undefined : 'nl'}}</td>
-          <td><img [src]="pr.createdBy.imageUrl" style="height: 33px;" class="rounded" crossorigin="use-credentials"/> {{pr.createdBy.displayName}}</td>
+          <td><img [src]="fetchImage(pr.createdBy.imageUrl) | async" style="height: 33px;" class="rounded"/> {{pr.createdBy.displayName}}</td>
           <td>
             <span *ngFor="let reviewer of pr.reviewers; trackBy: identifyReviewer">
               <span *ngIf="reviewer.vote != 0 && !reviewer.isContainer" class="badge position-relative" >
                 <span class="notify-badge badge" [class.text-bg-success]="reviewer.vote > 0" [class.text-bg-warning]="reviewer.vote == -5" [class.text-bg-danger]="reviewer.vote == -10">&nbsp;</span>
-                <img [src]="reviewer.imageUrl" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}"  crossorigin="use-credentials" />
+                <img [src]="fetchImage(reviewer.imageUrl) | async" style="height: 33px;" class="rounded" title="{{reviewer.vote | voteStatus}} by {{reviewer.displayName}}"  crossorigin="use-credentials" />
               </span>
             </span>
           </td>

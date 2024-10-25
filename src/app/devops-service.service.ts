@@ -53,4 +53,9 @@ export class DevopsService {
 
     window.localStorage.setItem('configuration', JSON.stringify(config));
   }
+
+  fetchImage(url: string): Observable<Blob> {
+    return this.http.get(url, { responseType: "blob", headers: this.getHeaders() })
+      .pipe(shareReplay(1));
+  }
 }
